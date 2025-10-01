@@ -107,6 +107,10 @@ type NewSubConnOptions struct {
 	// HealthCheckEnabled indicates whether health check service should be
 	// enabled on this SubConn
 	HealthCheckEnabled bool
+
+	// Temp struct field to illustrate example.
+	HealthCheckServiceName *string
+
 	// StateListener is called when the state of the subconn changes.  If nil,
 	// Balancer.UpdateSubConnState will be called instead.  Will never be
 	// invoked until after Connect() is called on the SubConn created with

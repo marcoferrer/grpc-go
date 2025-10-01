@@ -455,12 +455,22 @@ func (acbw *acBalancerWrapper) healthListenerRegFn() func(context.Context, func(
 		// The health package is not imported.
 		return noOpRegisterHealthListenerFn
 	}
-	cfg := acbw.ac.cc.healthCheckConfig()
-	if cfg == nil {
+
+	if !acbw.ac.scopts.HealthCheckEnabled {
 		return noOpRegisterHealthListenerFn
 	}
-	return func(ctx context.Context, listener func(balancer.SubConnState)) func() {
-		return regHealthLisFn.(healthProducerRegisterFn)(ctx, acbw, cfg.ServiceName, listener)
+
+	var healthServiceName string
+	if acbw.ac.scopts.HealthCheckServiceName == nil {
+		cfg := acbw.ac.cc.healthCheckConfig()
+		if cfg == nil {
+			return noOpRegisterHealthListenerFn
+		}
+		healthServiceName = cfg.ServiceName
+	}
+
+	return func(ctx context.Context, listener func(subConn balancer.SubConnState)) func() {
+		return regHealthLisFn.(healthProducerRegisterFn)(ctx, acbw, healthServiceName, listener)
 	}
 }
 
