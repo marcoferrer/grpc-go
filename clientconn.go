@@ -1470,7 +1470,9 @@ func (ac *addrConn) startHealthCheck(ctx context.Context) {
 	}
 
 	var healthCheckServiceName string
-	if ac.scopts.HealthCheckServiceName == nil {
+	if ac.scopts.HealthCheckServiceName != nil {
+		healthCheckServiceName = *ac.scopts.HealthCheckServiceName
+	} else {
 		healthCheckConfig := ac.cc.healthCheckConfig()
 		if healthCheckConfig == nil {
 			return
@@ -1510,6 +1512,8 @@ func (ac *addrConn) startHealthCheck(ctx context.Context) {
 	}
 	// Start the health checking stream.
 	go func() {
+		channelz.Info(logger, ac.channelz, "Health check is starting.")
+
 		err := healthCheckFunc(ctx, newStream, setConnectivityState, healthCheckServiceName)
 		if err != nil {
 			if status.Code(err) == codes.Unimplemented {

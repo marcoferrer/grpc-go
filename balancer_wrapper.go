@@ -208,9 +208,9 @@ func (ccb *ccBalancerWrapper) NewSubConn(addrs []resolver.Address, opts balancer
 	return acbw, nil
 }
 
-func (ccb *ccBalancerWrapper) RemoveSubConn(balancer.SubConn) {
+func (ccb *ccBalancerWrapper) RemoveSubConn(sc balancer.SubConn) {
 	// The graceful switch balancer will never call this.
-	logger.Errorf("ccb RemoveSubConn(%v) called unexpectedly, sc")
+	logger.Errorf("ccb RemoveSubConn(%v) called unexpectedly", sc)
 }
 
 func (ccb *ccBalancerWrapper) UpdateAddresses(sc balancer.SubConn, addrs []resolver.Address) {
@@ -461,7 +461,9 @@ func (acbw *acBalancerWrapper) healthListenerRegFn() func(context.Context, func(
 	}
 
 	var healthServiceName string
-	if acbw.ac.scopts.HealthCheckServiceName == nil {
+	if acbw.ac.scopts.HealthCheckServiceName != nil {
+		healthServiceName = *acbw.ac.scopts.HealthCheckServiceName
+	} else {
 		cfg := acbw.ac.cc.healthCheckConfig()
 		if cfg == nil {
 			return noOpRegisterHealthListenerFn
@@ -470,6 +472,7 @@ func (acbw *acBalancerWrapper) healthListenerRegFn() func(context.Context, func(
 	}
 
 	return func(ctx context.Context, listener func(subConn balancer.SubConnState)) func() {
+		logger.Info("Health listener RegFn executed")
 		return regHealthLisFn.(healthProducerRegisterFn)(ctx, acbw, healthServiceName, listener)
 	}
 }
