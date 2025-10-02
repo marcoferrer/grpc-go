@@ -79,6 +79,8 @@ type ClusterUpdate struct {
 	// "com.google.csm.telemetry_labels" with keys "service_name" or
 	// "service_namespace".
 	TelemetryLabels map[string]string
+
+	HealthCheckServiceName *string
 }
 
 // SecurityConfig contains the security configuration received as part of the

@@ -179,13 +179,22 @@ func validateClusterAndConstructClusterUpdate(cluster *v3clusterpb.Cluster, serv
 		}
 	}
 
+	var healthCheckServiceName *string
+	for _, hc := range cluster.HealthChecks {
+		if hc.GetGrpcHealthCheck() != nil {
+			healthCheckServiceName = &hc.GetGrpcHealthCheck().ServiceName
+			break
+		}
+	}
+
 	ret := ClusterUpdate{
-		ClusterName:      cluster.GetName(),
-		SecurityCfg:      sc,
-		MaxRequests:      circuitBreakersFromCluster(cluster),
-		LBPolicy:         lbPolicy,
-		OutlierDetection: od,
-		TelemetryLabels:  telemetryLabels,
+		ClusterName:            cluster.GetName(),
+		SecurityCfg:            sc,
+		MaxRequests:            circuitBreakersFromCluster(cluster),
+		LBPolicy:               lbPolicy,
+		OutlierDetection:       od,
+		TelemetryLabels:        telemetryLabels,
+		HealthCheckServiceName: healthCheckServiceName,
 	}
 
 	if lrs := cluster.GetLrsServer(); lrs != nil {

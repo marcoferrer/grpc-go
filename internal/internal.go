@@ -46,6 +46,8 @@ var (
 	KeepaliveMinServerPingTime = time.Second
 	// ParseServiceConfig parses a JSON representation of the service config.
 	ParseServiceConfig any // func(string) *serviceconfig.ParseResult
+
+	NewHealthCheckingServiceConfig any
 	// EqualServiceConfigForTesting is for testing service config generation and
 	// parsing. Both a and b should be returned by ParseServiceConfig.
 	// This function compares the config without rawJSON stripped, in case the

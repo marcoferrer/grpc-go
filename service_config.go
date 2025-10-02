@@ -167,6 +167,15 @@ func init() {
 	internal.ParseServiceConfig = func(js string) *serviceconfig.ParseResult {
 		return parseServiceConfig(js, defaultMaxCallAttempts)
 	}
+	internal.NewHealthCheckingServiceConfig = func(serviceName string) *serviceconfig.ParseResult {
+		return &serviceconfig.ParseResult{
+			Config: ServiceConfig{
+				healthCheckConfig: &healthCheckConfig{
+					ServiceName: serviceName,
+				},
+			},
+		}
+	}
 }
 
 func parseServiceConfig(js string, maxAttempts int) *serviceconfig.ParseResult {

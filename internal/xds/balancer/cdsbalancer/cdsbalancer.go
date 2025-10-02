@@ -22,6 +22,7 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"fmt"
+	"google.golang.org/grpc/internal"
 	"sync/atomic"
 	"unsafe"
 
@@ -520,10 +521,18 @@ func (b *cdsBalancer) onClusterUpdate(name string, update xdsresource.ClusterUpd
 			return
 		}
 
+		var newServiceConfigResult *serviceconfig.ParseResult
+		if update.HealthCheckServiceName != nil {
+			newServiceConfigResult = internal.NewHealthCheckingServiceConfig.(func(string) *serviceconfig.ParseResult)(*update.HealthCheckServiceName)
+		}
+
 		ccState := balancer.ClientConnState{
-			ResolverState:  xdsclient.SetClient(resolver.State{}, b.xdsClient),
+			ResolverState: xdsclient.SetClient(resolver.State{
+				ServiceConfig: newServiceConfigResult,
+			}, b.xdsClient),
 			BalancerConfig: sc,
 		}
+
 		if err := b.childLB.UpdateClientConnState(ccState); err != nil {
 			b.logger.Errorf("Encountered error when sending config {%+v} to child policy: %v", ccState, err)
 		}
