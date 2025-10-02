@@ -1470,21 +1470,15 @@ func (ac *addrConn) startHealthCheck(ctx context.Context) {
 	}
 
 	var healthCheckServiceName string
-	channelz.Error(logger, ac.channelz, "Health check is starting.")
-	channelz.Error(logger, ac.channelz, "Health check is starting.")
-	channelz.Error(logger, ac.channelz, "Health check is starting.")
-	channelz.Error(logger, ac.channelz, "Health check is starting.")
-	channelz.Error(logger, ac.channelz, "Health check is starting.")
-	channelz.Error(logger, ac.channelz, "Health check is starting.")
-	//if ac.scopts.HealthCheckServiceName != nil {
-	//	healthCheckServiceName = *ac.scopts.HealthCheckServiceName
-	//} else {
-	//	healthCheckConfig := ac.cc.healthCheckConfig()
-	//	if healthCheckConfig == nil {
-	//		return
-	//	}
-	//	healthCheckServiceName = healthCheckConfig.ServiceName
-	//}
+	if ac.scopts.HealthCheckServiceName != nil {
+		healthCheckServiceName = *ac.scopts.HealthCheckServiceName
+	} else {
+		healthCheckConfig := ac.cc.healthCheckConfig()
+		if healthCheckConfig == nil {
+			return
+		}
+		healthCheckServiceName = healthCheckConfig.ServiceName
+	}
 
 	healthCheckFunc := internal.HealthCheckFunc
 	if healthCheckFunc == nil {
@@ -1494,6 +1488,13 @@ func (ac *addrConn) startHealthCheck(ctx context.Context) {
 		channelz.Error(logger, ac.channelz, "Health check is requested but health check function is not set.")
 		return
 	}
+
+	channelz.Error(logger, ac.channelz, "Health check is starting. startHealthCheck")
+	channelz.Error(logger, ac.channelz, "Health check is starting. startHealthCheck")
+	channelz.Error(logger, ac.channelz, "Health check is starting. startHealthCheck")
+	channelz.Error(logger, ac.channelz, "Health check is starting. startHealthCheck")
+	channelz.Error(logger, ac.channelz, "Health check is starting. startHealthCheck")
+	channelz.Error(logger, ac.channelz, "Health check is starting. startHealthCheck")
 
 	healthcheckManagingState = true
 
@@ -1518,7 +1519,9 @@ func (ac *addrConn) startHealthCheck(ctx context.Context) {
 	}
 	// Start the health checking stream.
 	go func() {
-		channelz.Info(logger, ac.channelz, "Health check is starting.")
+		channelz.Info(logger, ac.channelz, "Health check is starting. startHealthCheck")
+		channelz.Info(logger, ac.channelz, "Health check is starting. startHealthCheck")
+		channelz.Info(logger, ac.channelz, "Health check is starting. startHealthCheck")
 
 		err := healthCheckFunc(ctx, newStream, setConnectivityState, healthCheckServiceName)
 		if err != nil {

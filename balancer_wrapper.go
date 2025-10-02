@@ -460,6 +460,17 @@ func (acbw *acBalancerWrapper) healthListenerRegFn() func(context.Context, func(
 		return noOpRegisterHealthListenerFn
 	}
 
+	var healthServiceName string
+	if acbw.ac.scopts.HealthCheckServiceName != nil {
+		healthServiceName = *acbw.ac.scopts.HealthCheckServiceName
+	} else {
+		cfg := acbw.ac.cc.healthCheckConfig()
+		if cfg == nil {
+			return noOpRegisterHealthListenerFn
+		}
+		healthServiceName = cfg.ServiceName
+	}
+
 	// testing
 	logger.Errorln("Health listener RegFn executed")
 	logger.Errorln("Health listener RegFn executed")
@@ -470,20 +481,9 @@ func (acbw *acBalancerWrapper) healthListenerRegFn() func(context.Context, func(
 	logger.Errorln("Health listener RegFn executed")
 	logger.Errorln("Health listener RegFn executed")
 
-	//var healthServiceName string
-	//if acbw.ac.scopts.HealthCheckServiceName != nil {
-	//	healthServiceName = *acbw.ac.scopts.HealthCheckServiceName
-	//} else {
-	//	cfg := acbw.ac.cc.healthCheckConfig()
-	//	if cfg == nil {
-	//		return noOpRegisterHealthListenerFn
-	//	}
-	//	healthServiceName = cfg.ServiceName
-	//}
-
 	return func(ctx context.Context, listener func(subConn balancer.SubConnState)) func() {
 		logger.Info("Health listener RegFn executed")
-		return regHealthLisFn.(healthProducerRegisterFn)(ctx, acbw, "", listener)
+		return regHealthLisFn.(healthProducerRegisterFn)(ctx, acbw, healthServiceName, listener)
 	}
 }
 
