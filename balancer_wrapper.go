@@ -460,6 +460,7 @@ func (acbw *acBalancerWrapper) healthListenerRegFn() func(context.Context, func(
 		return noOpRegisterHealthListenerFn
 	}
 
+	// testing
 	logger.Errorln("Health listener RegFn executed")
 	logger.Errorln("Health listener RegFn executed")
 	logger.Errorln("Health listener RegFn executed")
