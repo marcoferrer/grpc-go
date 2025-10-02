@@ -1470,15 +1470,21 @@ func (ac *addrConn) startHealthCheck(ctx context.Context) {
 	}
 
 	var healthCheckServiceName string
-	if ac.scopts.HealthCheckServiceName != nil {
-		healthCheckServiceName = *ac.scopts.HealthCheckServiceName
-	} else {
-		healthCheckConfig := ac.cc.healthCheckConfig()
-		if healthCheckConfig == nil {
-			return
-		}
-		healthCheckServiceName = healthCheckConfig.ServiceName
-	}
+	channelz.Error(logger, ac.channelz, "Health check is starting.")
+	channelz.Error(logger, ac.channelz, "Health check is starting.")
+	channelz.Error(logger, ac.channelz, "Health check is starting.")
+	channelz.Error(logger, ac.channelz, "Health check is starting.")
+	channelz.Error(logger, ac.channelz, "Health check is starting.")
+	channelz.Error(logger, ac.channelz, "Health check is starting.")
+	//if ac.scopts.HealthCheckServiceName != nil {
+	//	healthCheckServiceName = *ac.scopts.HealthCheckServiceName
+	//} else {
+	//	healthCheckConfig := ac.cc.healthCheckConfig()
+	//	if healthCheckConfig == nil {
+	//		return
+	//	}
+	//	healthCheckServiceName = healthCheckConfig.ServiceName
+	//}
 
 	healthCheckFunc := internal.HealthCheckFunc
 	if healthCheckFunc == nil {
